@@ -10,7 +10,6 @@ Daemon Python qui surveille des répertoires contenant films/épisodes et réenc
 - `delete_original` : false par défaut (garde l'original)
 - `codec_video` : `hevc_nvenc` (GPU), `h264_nvenc` (GPU), `libx265` (CPU, taille minimale), `libx264` (CPU, rapide)
 - `preset_video` : `ultrafast`, `fast`, `medium`, `slow`, `veryslow` (ou `p1`..`p7` pour NVENC)
-- `use_gpu` : `true`/`false`
 
 ## Lancement
 ```bash

@@ -1,7 +1,8 @@
+
 watch_dirs:
   - /mnt/western2000/single/movies
   - /mnt/western2000/single/series/
-check_interval_minutes: 30
+check_interval_minutes: 3
 reference_duration_hours: 2.0
 reference_max_size_gb: 1.5
 oversize_factor: 1.5
@@ -13,7 +14,6 @@ video_extensions:
 codec_video: hevc_nvenc
 fallback_video: libx264
 preset_video: fast
-use_gpu: true
 codec_audio: copy
 delete_original: true
 reencoded_suffix: .reencoded

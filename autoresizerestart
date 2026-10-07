@@ -1,0 +1,6 @@
+#!/bin/bash
+kill $(pgrep -f autoresize_daemon.py) $(pgrep -f 'ffmpeg -y -i /mnt') 2>/dev/null
+sleep 1
+nohup python3 /home/niko/projects/autoresize/autoresize_daemon.py > /dev/null 2>&1 &
+sleep 1
+echo "Daemon redémarré (PID: $(pgrep -f autoresize_daemon.py))"

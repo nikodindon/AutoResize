@@ -59,6 +59,12 @@ def reencode(src):
     if CONFIG.get("delete_original", False):
         src.unlink()
         logger.info(f"Deleted original {src}")
+        # Renommer le .reencoded en nom original (sans suffixe)
+        out_renamed = str(src)
+        if Path(out).exists():
+            Path(out).rename(out_renamed)
+            logger.info(f"Renamed reencoded {out} -> {out_renamed}")
+            out = out_renamed  # mettre à jour pour le cache
     else:
         logger.info(f"Kept original {src} (delete_original=false)")
     cache = load_cache()
@@ -90,24 +96,26 @@ def main():
     if "--clean" in sys.argv:
         clean()
         return
-    logger.info("Daemon started.")
-    for d in CONFIG["watch_dirs"]:
-        for ext in CONFIG["video_extensions"]:
-            for f in Path(d).rglob(f"*{ext}"):
-                if CONFIG.get("reencoded_suffix") in f.name: continue
-                cache = load_cache()
-                key = str(f)
-                size = f.stat().st_size
-                # Skip rapide : même taille, déjà analysé, pas réencodé
-                if key in cache and cache[key].get("size") == size and not cache[key].get("reencoded"):
-                    continue
-                ok, s, dur = should_reencode(f)
-                logger.info(f"Check {f}: size={s}, duration={dur}s, oversize={ok}")
-                if ok:
-                    if ffmpeg_running():
-                        logger.info(f"Queue: ffmpeg already running, skip {f}")
-                    else:
-                        reencode(f)
+    logger.info("Daemon started (loop mode, interval=%s min).", CONFIG.get("check_interval_minutes", 30))
+    while True:
+        for d in CONFIG["watch_dirs"]:
+            for ext in CONFIG["video_extensions"]:
+                for f in Path(d).rglob(f"*{ext}"):
+                    if CONFIG.get("reencoded_suffix") in f.name: continue
+                    cache = load_cache()
+                    key = str(f)
+                    size = f.stat().st_size
+                    # Skip rapide : déjà réencodé (même taille)
+                    if key in cache and cache[key].get("reencoded") and cache[key].get("size") == size:
+                        continue
+                    ok, s, dur = should_reencode(f)
+                    logger.info(f"Check {f}: size={s}, duration={dur}s, oversize={ok}")
+                    if ok:
+                        if ffmpeg_running():
+                            logger.info(f"Queue: ffmpeg already running, skip {f}")
+                        else:
+                            reencode(f)
+        time.sleep(CONFIG.get("check_interval_minutes", 30) * 60)
 
 if __name__ == "__main__":
     main()
