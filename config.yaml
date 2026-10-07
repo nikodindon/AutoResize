@@ -1,0 +1,21 @@
+watch_dirs:
+  - /mnt/western2000/single/movies
+  - /mnt/western2000/single/series/
+check_interval_minutes: 30
+reference_duration_hours: 2.0
+reference_max_size_gb: 1.5
+oversize_factor: 1.5
+video_extensions:
+  - .mkv
+  - .mp4
+  - .avi
+# Choix : hevc_nvenc (GPU), libx265 (CPU HEVC), libx264 (CPU H264 rapide), h264_nvenc (GPU)
+codec_video: hevc_nvenc
+fallback_video: libx264
+preset_video: fast
+use_gpu: true
+codec_audio: copy
+delete_original: true
+reencoded_suffix: .reencoded
+log_file: /home/niko/projects/autoresize/autoresize.log
+state_file: /home/niko/projects/autoresize/state.json

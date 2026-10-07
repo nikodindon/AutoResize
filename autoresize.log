@@ -1,0 +1,37 @@
+2026-10-07 18:57:22,703 [INFO] Daemon started.
+2026-10-07 18:58:07,442 [INFO] Daemon started.
+2026-10-07 18:58:07,641 [INFO] Check /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv: size=3140044531, duration=5872.583s, oversize=True
+2026-10-07 18:58:07,641 [INFO] Reencoding /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv -> /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv.reencoded.mkv
+2026-10-07 19:17:52,381 [INFO] Daemon started.
+2026-10-07 19:17:52,413 [INFO] Check /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv: size=3140044531, duration=5872.583s, oversize=True
+2026-10-07 19:17:52,457 [INFO] Queue: ffmpeg already running, skip /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv
+2026-10-07 19:18:02,984 [INFO] Check /mnt/western2000/single/movies/Big Daddy (1999)/Big.Daddy.1999.1080p.BluRay.x265.mp4: size=1556786348, duration=5584.587s, oversize=False
+2026-10-07 19:18:09,097 [INFO] Check /mnt/western2000/single/movies/Punch-Drunk Love (2002)/Punch-Drunk.Love.2002.1080p.BluRay.x265-LAMA.mp4: size=1595105732, duration=5719.765s, oversize=False
+2026-10-07 19:18:13,783 [INFO] Check /mnt/western2000/single/movies/Hustle (2022)/Hustle.2022.HDRip.XviD.AC3-EVO.avi: size=1474295668, duration=7086.496s, oversize=False
+2026-10-07 19:18:14,240 [INFO] Daemon started.
+2026-10-07 19:18:14,241 [INFO] Check /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv: size=3140044531, duration=5872.583s, oversize=True
+2026-10-07 19:18:14,270 [INFO] Reencoding /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv -> /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv.reencoded.mkv (codec=hevc_nvenc)
+2026-10-07 19:18:14,389 [WARNING] Codec hevc_nvenc failed (returncode=218), trying fallback.
+2026-10-07 19:18:14,389 [INFO] Reencoding /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv -> /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv.reencoded.mkv (codec=libx265)
+2026-10-07 20:31:05,737 [INFO] Daemon started.
+2026-10-07 20:31:05,738 [INFO] Check /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv: size=3140044531, duration=5872.583s, oversize=True
+2026-10-07 20:31:05,771 [INFO] Queue: ffmpeg already running, skip /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv
+2026-10-07 20:31:05,772 [INFO] Check /mnt/western2000/single/movies/Big Daddy (1999)/Big.Daddy.1999.1080p.BluRay.x265.mp4: size=1556786348, duration=5584.587s, oversize=False
+2026-10-07 20:31:05,772 [INFO] Check /mnt/western2000/single/movies/Punch-Drunk Love (2002)/Punch-Drunk.Love.2002.1080p.BluRay.x265-LAMA.mp4: size=1595105732, duration=5719.765s, oversize=False
+2026-10-07 20:31:05,772 [INFO] Check /mnt/western2000/single/movies/Hustle (2022)/Hustle.2022.HDRip.XviD.AC3-EVO.avi: size=1474295668, duration=7086.496s, oversize=False
+2026-10-07 20:31:28,358 [INFO] Daemon started.
+2026-10-07 20:31:28,358 [INFO] Check /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv: size=3140044531, duration=5872.583s, oversize=True
+2026-10-07 20:31:28,397 [INFO] Reencoding /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv -> /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv.reencoded.mkv (codec=hevc_nvenc)
+2026-10-07 20:31:28,526 [INFO] FFmpeg output saved to autoresize_ffmpeg.log (codec=hevc_nvenc, returncode=218)
+2026-10-07 20:31:28,526 [WARNING] Codec hevc_nvenc failed (returncode=218), trying fallback.
+2026-10-07 20:31:28,526 [INFO] Reencoding /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv -> /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv.reencoded.mkv (codec=libx264)
+2026-10-07 21:06:16,956 [INFO] FFmpeg output saved to autoresize_ffmpeg.log (codec=libx264, returncode=0)
+2026-10-07 21:06:16,956 [INFO] Kept original /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv (delete_original=false)
+2026-10-07 21:06:16,957 [INFO] Marked /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv as reencoded in state.json
+2026-10-07 21:06:16,958 [INFO] Check /mnt/western2000/single/movies/Big Daddy (1999)/Big.Daddy.1999.1080p.BluRay.x265.mp4: size=1556786348, duration=5584.587s, oversize=False
+2026-10-07 21:06:16,958 [INFO] Check /mnt/western2000/single/movies/Punch-Drunk Love (2002)/Punch-Drunk.Love.2002.1080p.BluRay.x265-LAMA.mp4: size=1595105732, duration=5719.765s, oversize=False
+2026-10-07 21:06:16,959 [INFO] Check /mnt/western2000/single/movies/Hustle (2022)/Hustle.2022.HDRip.XviD.AC3-EVO.avi: size=1474295668, duration=7086.496s, oversize=False
+2026-10-07 21:13:21,979 [INFO] Clean: renamed /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv.reencoded.mkv -> /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv
+2026-10-07 21:13:21,979 [INFO] Clean finished.
+2026-10-07 21:15:36,987 [INFO] Daemon started.
+2026-10-07 21:15:36,988 [INFO] Check /mnt/western2000/single/movies/The Bet (1997)/Le Pari (1997) - 1080p FR x264 acc mHDgz.mkv: size=1393386206, duration=5872.583s, oversize=False

@@ -1,0 +1,12 @@
+[Unit]
+Description=AutoResize Video Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/niko/projects/autoresize/autoresize_daemon.py
+Restart=on-failure
+WorkingDirectory=/home/niko/projects/autoresize
+
+[Install]
+WantedBy=multi-user.target
