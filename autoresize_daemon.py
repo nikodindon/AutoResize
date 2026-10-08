@@ -47,8 +47,14 @@ def reencode(src):
     bitrate_kbps = int((target * 8) / (duration * 1024)) if duration > 0 else 2000
     codecs = [CONFIG["codec_video"], CONFIG.get("fallback_video", "libx265")]
     result = None
-    for c in codecs:
-        cmd = ["ffmpeg", "-y", "-i", str(src), "-c:v", c, "-preset", CONFIG.get("preset_video", "medium"), "-b:v", f"{bitrate_kbps}k", "-c:a", CONFIG["codec_audio"], out]
+    for i, c in enumerate(codecs):
+        preset = CONFIG.get("preset_video", "medium") if i == 0 else CONFIG.get("preset_fallback", CONFIG.get("preset_video", "medium"))
+        cmd = ["ffmpeg", "-y", "-i", str(src), "-c:v", c, "-preset", preset]
+        if "nvenc" in c and CONFIG.get("cq") is not None:
+            cmd += ["-cq", str(CONFIG.get("cq"))]
+        else:
+            cmd += ["-b:v", f"{bitrate_kbps}k"]
+        cmd += ["-c:a", CONFIG["codec_audio"], out]
         logger.info(f"Reencoding {src} -> {out} (codec={c})")
         with open("autoresize_ffmpeg.log", "a") as ffmpeg_log:
             result = subprocess.run(cmd, stdout=ffmpeg_log, stderr=subprocess.STDOUT)
