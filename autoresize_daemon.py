@@ -66,24 +66,26 @@ def reencode(src):
     if result and result.returncode != 0:
         logger.error(f"Reencoding failed for {src} with all codecs.")
         return
-    if CONFIG.get("delete_original", False):
-        src.unlink()
-        logger.info(f"Deleted original {src}")
-        # Renommer le .reencoded en nom original (sans suffixe)
-        out_renamed = str(src)
-        if Path(out).exists():
-            Path(out).rename(out_renamed)
-            logger.info(f"Renamed reencoded {out} -> {out_renamed}")
-            out = out_renamed  # mettre à jour pour le cache
+    # Validation du fichier produit avant suppression
+    validated = validate_output(out, float(cache.get(str(src), {}).get("duration", 0) or float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(src)], capture_output=True, text=True).stdout.strip() or 0)))
+    if validated:
+        logger.info(f"Output validated: {out} (duration OK)")
+        if CONFIG.get("delete_original", False):
+            # Sécurité : renommage atomique de l'original au lieu de suppression immédiate
+            original_backup = str(src) + ".original"
+            if Path(str(src)).exists():
+                Path(str(src)).rename(original_backup)
+                logger.info(f"Original backed up: {str(src)} -> {original_backup}")
             # Appel Kodi clean library
             try:
                 import urllib.request, base64, json
                 kodi_cfg = CONFIG.get("kodi", {})
                 if kodi_cfg.get("host"):
+                    content = "movies" if "series" not in str(src).lower() else "tvshows"
                     auth = base64.b64encode(f"{kodi_cfg.get('user','')}:{kodi_cfg.get('pass','')}".encode()).decode()
                     req = urllib.request.Request(
                         f"http://{kodi_cfg['host']}:{kodi_cfg.get('port',8082)}/jsonrpc",
-                        data=json.dumps({"jsonrpc":"2.0","method":"VideoLibrary.Clean","params":{"showdialogs":False,"content":"movies"},"id":1}).encode(),
+                        data=json.dumps({"jsonrpc":"2.0","method":"VideoLibrary.Clean","params":{"showdialogs":False,"content":content},"id":1}).encode(),
                         headers={"Content-Type":"application/json","Authorization":"Basic "+auth}
                     )
                     urllib.request.urlopen(req, timeout=5)
@@ -91,15 +93,13 @@ def reencode(src):
             except Exception as e:
                 logger.warning(f"Kodi clean library failed: {e}")
     else:
-        logger.info(f"Kept original {src} (delete_original=false)")
-    # Mettre à jour la taille du fichier final (renommé ou non) dans le cache
-    final_path = Path(str(src)) if CONFIG.get("delete_original", False) and Path(out).exists() else (Path(out_renamed) if CONFIG.get("delete_original", False) else Path(out))
-    # En fait, utilisons directement le chemin final (out après renommage si applicable)
-    final_path = Path(out_renamed) if (CONFIG.get("delete_original", False) and Path(out_renamed).exists()) else (Path(str(src)) if CONFIG.get("delete_original", False) and Path(str(src)).exists() else Path(out))
+        logger.warning(f"Output validation failed for {out}; keeping original untouched.")
+    # Mise à jour du cache avec la version du codec
+    final_path = Path(out)
     if final_path.exists():
         final_size = final_path.stat().st_size
         cache = load_cache()
-        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": str(final_path) if final_path != Path(str(src)) else str(final_path), "size": final_size}
+        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out, "codec_version": {"codec": c, "preset": preset, "cq": CONFIG.get("cq")}, "size": final_size}
         save_cache(cache)
         logger.info(f"Updated cache size={final_size} for {final_path}")
     else:
@@ -107,6 +107,16 @@ def reencode(src):
         cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out}
         save_cache(cache)
     logger.info(f"Marked {src} as reencoded in state.json")
+
+def validate_output(path, expected_duration):
+    try:
+        out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(path)], capture_output=True, text=True)
+        dur = float(out.stdout.strip() or 0)
+        if dur == 0:
+            return False
+        return abs(dur - expected_duration) / max(expected_duration, 1) < 0.1
+    except:
+        return False
 
 def ffmpeg_running():
     try:
