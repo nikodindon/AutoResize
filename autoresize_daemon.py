@@ -32,7 +32,11 @@ def should_reencode(path):
         duration = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(path)], capture_output=True, text=True).stdout.strip() or 0)
         cache[key] = {"size": size, "duration": duration}
         save_cache(cache)
-    return size > target_size(duration) * CONFIG["oversize_factor"], size, duration
+    result = size > target_size(duration) * CONFIG["oversize_factor"]
+    if not result:
+        cache[key]["checked_not_oversize"] = True
+        save_cache(cache)
+    return result, size, duration
 
 def reencode(src):
     out = str(src) + CONFIG["reencoded_suffix"] + src.suffix
@@ -105,8 +109,10 @@ def main():
                     cache = load_cache()
                     key = str(f)
                     size = f.stat().st_size
-                    # Skip rapide : déjà réencodé (même taille)
+                    # Skip rapide : déjà réencodé (même taille) ou non oversize confirmé
                     if key in cache and cache[key].get("reencoded") and cache[key].get("size") == size:
+                        continue
+                    if key in cache and cache[key].get("checked_not_oversize") and cache[key].get("size") == size:
                         continue
                     ok, s, dur = should_reencode(f)
                     logger.info(f"Check {f}: size={s}, duration={dur}s, oversize={ok}")
