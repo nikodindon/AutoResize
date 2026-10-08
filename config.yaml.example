@@ -1,0 +1,24 @@
+watch_dirs:
+  - /path/to/movies
+  - /path/to/series
+check_interval_minutes: 3
+reference_duration_hours: 2.0
+reference_max_size_gb: 1.5
+oversize_factor: 1.5
+video_extensions:
+  - .mkv
+  - .mp4
+  - .avi
+codec_video: hevc_nvenc
+fallback_video: libx264
+preset_video: fast
+codec_audio: copy
+delete_original: false
+reencoded_suffix: .reencoded
+log_file: autoresize.log
+state_file: state.json
+kodi:
+  host: 192.168.1.100
+  port: 8082
+  user: user
+  pass: password

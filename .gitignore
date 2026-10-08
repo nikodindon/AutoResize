@@ -4,3 +4,5 @@ autoresize_ffmpeg.log
 monitor.log
 state.json
 state.json.old
+# Config perso (hors repo)
+config.yaml
