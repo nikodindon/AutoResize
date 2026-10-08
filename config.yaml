@@ -19,3 +19,8 @@ delete_original: true
 reencoded_suffix: .reencoded
 log_file: /home/niko/projects/autoresize/autoresize.log
 state_file: /home/niko/projects/autoresize/state.json
+kodi:
+  host: 100.66.131.33
+  port: 8082
+  user: niko
+  pass: olitec

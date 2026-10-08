@@ -69,6 +69,21 @@ def reencode(src):
             Path(out).rename(out_renamed)
             logger.info(f"Renamed reencoded {out} -> {out_renamed}")
             out = out_renamed  # mettre à jour pour le cache
+            # Appel Kodi clean library
+            try:
+                import urllib.request, base64, json
+                kodi_cfg = CONFIG.get("kodi", {})
+                if kodi_cfg.get("host"):
+                    auth = base64.b64encode(f"{kodi_cfg.get('user','')}:{kodi_cfg.get('pass','')}".encode()).decode()
+                    req = urllib.request.Request(
+                        f"http://{kodi_cfg['host']}:{kodi_cfg.get('port',8082)}/jsonrpc",
+                        data=json.dumps({"jsonrpc":"2.0","method":"VideoLibrary.Clean","params":{"showdialogs":False,"content":"movies"},"id":1}).encode(),
+                        headers={"Content-Type":"application/json","Authorization":"Basic "+auth}
+                    )
+                    urllib.request.urlopen(req, timeout=5)
+                    logger.info("Kodi clean library called.")
+            except Exception as e:
+                logger.warning(f"Kodi clean library failed: {e}")
     else:
         logger.info(f"Kept original {src} (delete_original=false)")
     cache = load_cache()
