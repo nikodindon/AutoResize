@@ -136,8 +136,17 @@ def main():
                     key = str(f)
                     size = f.stat().st_size
                     # Skip rapide : déjà réencodé (même taille) ou non oversize confirmé
-                    if key in cache and cache[key].get("reencoded") and cache[key].get("size") == size:
-                        continue
+                    if key in cache and cache[key].get("reencoded"):
+                        if cache[key].get("size") == size:
+                            continue
+                        else:
+                            # Taille du fichier renommé a changé, mettre à jour le cache
+                            cache = load_cache()
+                            cache[key]["size"] = size
+                            # Mettre à jour reencoded_file si nécessaire (le même chemin)
+                            cache[key]["reencoded_file"] = str(f)
+                            save_cache(cache)
+                            continue
                     if key in cache and cache[key].get("checked_not_oversize") and cache[key].get("size") == size:
                         continue
                     ok, s, dur = should_reencode(f)
