@@ -86,9 +86,20 @@ def reencode(src):
                 logger.warning(f"Kodi clean library failed: {e}")
     else:
         logger.info(f"Kept original {src} (delete_original=false)")
-    cache = load_cache()
-    cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out}
-    save_cache(cache)
+    # Mettre à jour la taille du fichier final (renommé ou non) dans le cache
+    final_path = Path(str(src)) if CONFIG.get("delete_original", False) and Path(out).exists() else (Path(out_renamed) if CONFIG.get("delete_original", False) else Path(out))
+    # En fait, utilisons directement le chemin final (out après renommage si applicable)
+    final_path = Path(out_renamed) if (CONFIG.get("delete_original", False) and Path(out_renamed).exists()) else (Path(str(src)) if CONFIG.get("delete_original", False) and Path(str(src)).exists() else Path(out))
+    if final_path.exists():
+        final_size = final_path.stat().st_size
+        cache = load_cache()
+        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": str(final_path) if final_path != Path(str(src)) else str(final_path), "size": final_size}
+        save_cache(cache)
+        logger.info(f"Updated cache size={final_size} for {final_path}")
+    else:
+        cache = load_cache()
+        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out}
+        save_cache(cache)
     logger.info(f"Marked {src} as reencoded in state.json")
 
 def ffmpeg_running():
