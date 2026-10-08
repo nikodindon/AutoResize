@@ -16,3 +16,24 @@
 2026-10-08 16:23:45,631 [INFO] FFmpeg output saved to autoresize_ffmpeg.log (codec=hevc_nvenc, returncode=-9)
 2026-10-08 16:23:45,632 [WARNING] Codec hevc_nvenc failed (returncode=-9), trying fallback.
 2026-10-08 16:23:45,632 [INFO] Reencoding /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv -> /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv.reencoded.mkv (codec=libx264)
+2026-10-08 16:29:45,197 [INFO] Daemon started (loop mode, interval=3 min).
+2026-10-08 16:29:45,204 [INFO] Check /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv: size=2091942337, duration=8404.98s, oversize=True
+2026-10-08 16:29:45,242 [INFO] Reencoding /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv -> /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv.reencoded.mkv (codec=hevc_nvenc)
+2026-10-08 16:43:23,474 [INFO] FFmpeg output saved to autoresize_ffmpeg.log (codec=hevc_nvenc, returncode=0)
+2026-10-08 16:43:23,507 [INFO] Output validated: /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv.reencoded.mkv (duration OK)
+2026-10-08 16:43:23,508 [INFO] Updated cache size=1720227789 for /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv.reencoded.mkv
+2026-10-08 16:43:23,508 [INFO] Marked /mnt/western2000/single/movies/Star Wars - Episode III - Revenge of the Sith (2005)/Star Wars Revenge of the Sith 2005 1080p MA WEB-DL DDP5 1 H 264-SARVO.mkv as reencoded in state.json
+2026-10-08 16:43:23,553 [INFO] Check /mnt/western2000/single/movies/Independence Day (1996)/Independence.Day.1996.EXTENDED.HEVC.1080p.BluRay.DTS.x265-LEGi0N.mkv: size=3168248970, duration=9213.374s, oversize=True
+2026-10-08 16:43:23,593 [INFO] Reencoding /mnt/western2000/single/movies/Independence Day (1996)/Independence.Day.1996.EXTENDED.HEVC.1080p.BluRay.DTS.x265-LEGi0N.mkv -> /mnt/western2000/single/movies/Independence Day (1996)/Independence.Day.1996.EXTENDED.HEVC.1080p.BluRay.DTS.x265-LEGi0N.mkv.reencoded.mkv (codec=hevc_nvenc)
+2026-10-08 16:58:26,875 [INFO] FFmpeg output saved to autoresize_ffmpeg.log (codec=hevc_nvenc, returncode=0)
+2026-10-08 16:58:26,900 [INFO] Output validated: /mnt/western2000/single/movies/Independence Day (1996)/Independence.Day.1996.EXTENDED.HEVC.1080p.BluRay.DTS.x265-LEGi0N.mkv.reencoded.mkv (duration OK)
+2026-10-08 16:58:26,901 [INFO] Updated cache size=3404001874 for /mnt/western2000/single/movies/Independence Day (1996)/Independence.Day.1996.EXTENDED.HEVC.1080p.BluRay.DTS.x265-LEGi0N.mkv.reencoded.mkv
+2026-10-08 16:58:26,901 [INFO] Marked /mnt/western2000/single/movies/Independence Day (1996)/Independence.Day.1996.EXTENDED.HEVC.1080p.BluRay.DTS.x265-LEGi0N.mkv as reencoded in state.json
+2026-10-08 16:58:26,942 [INFO] Check /mnt/western2000/single/movies/Armageddon (1998)/Armageddon 1998 HEVC D3FiL3R (bd50).mkv: size=2482298987, duration=9050.24s, oversize=True
+2026-10-08 16:58:26,981 [INFO] Reencoding /mnt/western2000/single/movies/Armageddon (1998)/Armageddon 1998 HEVC D3FiL3R (bd50).mkv -> /mnt/western2000/single/movies/Armageddon (1998)/Armageddon 1998 HEVC D3FiL3R (bd50).mkv.reencoded.mkv (codec=hevc_nvenc)
+2026-10-08 17:10:31,828 [INFO] FFmpeg output saved to autoresize_ffmpeg.log (codec=hevc_nvenc, returncode=0)
+2026-10-08 17:10:31,852 [INFO] Output validated: /mnt/western2000/single/movies/Armageddon (1998)/Armageddon 1998 HEVC D3FiL3R (bd50).mkv.reencoded.mkv (duration OK)
+2026-10-08 17:10:31,853 [INFO] Updated cache size=2309314002 for /mnt/western2000/single/movies/Armageddon (1998)/Armageddon 1998 HEVC D3FiL3R (bd50).mkv.reencoded.mkv
+2026-10-08 17:10:31,853 [INFO] Marked /mnt/western2000/single/movies/Armageddon (1998)/Armageddon 1998 HEVC D3FiL3R (bd50).mkv as reencoded in state.json
+2026-10-08 17:10:31,905 [INFO] Check /mnt/western2000/single/movies/Avengers - Endgame (2019)/Avengers Endgame.2019.1080p.WEB-DL.H264.AC3-EVO.mkv: size=2896041501, duration=10896.084s, oversize=True
+2026-10-08 17:10:31,944 [INFO] Reencoding /mnt/western2000/single/movies/Avengers - Endgame (2019)/Avengers Endgame.2019.1080p.WEB-DL.H264.AC3-EVO.mkv -> /mnt/western2000/single/movies/Avengers - Endgame (2019)/Avengers Endgame.2019.1080p.WEB-DL.H264.AC3-EVO.mkv.reencoded.mkv (codec=hevc_nvenc)

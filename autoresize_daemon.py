@@ -131,9 +131,19 @@ def clean():
         if v.get("reencoded") and v.get("reencoded_file"):
             original = Path(k)
             new_file = Path(v["reencoded_file"])
+            original_backup = str(k) + ".original"
             if new_file.exists():
-                new_file.rename(original)
-                logger.info(f"Clean: renamed {new_file} -> {original}")
+                # Vérifier que le fichier renommé est valide avant suppression du backup
+                validated = validate_output(new_file, float(cache.get(k, {}).get("duration", 0) or float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", k], capture_output=True, text=True).stdout.strip() or 0)))
+                if validated:
+                    new_file.rename(original)
+                    logger.info(f"Clean: renamed {new_file} -> {original}")
+                    # Suppression sécurisée différée du backup .original
+                    if Path(original_backup).exists():
+                        Path(original_backup).unlink()
+                        logger.info(f"Clean: removed backup {original_backup}")
+                else:
+                    logger.warning(f"Clean: output validation failed for {new_file}, not renaming.")
             else:
                 logger.info(f"Clean: reencoded file missing {new_file}")
     logger.info("Clean finished.")

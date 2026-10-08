@@ -3,15 +3,17 @@ watch_dirs:
   - /path/to/series
 check_interval_minutes: 3
 reference_duration_hours: 2.0
-reference_max_size_gb: 1.5
-oversize_factor: 1.5
+reference_max_size_gb: 1.0
+oversize_factor: 1.3
 video_extensions:
   - .mkv
   - .mp4
   - .avi
 codec_video: hevc_nvenc
-fallback_video: libx264
-preset_video: fast
+fallback_video: libx265
+preset_video: p5
+preset_fallback: medium
+cq: 27
 codec_audio: copy
 delete_original: false
 reencoded_suffix: .reencoded

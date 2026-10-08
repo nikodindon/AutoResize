@@ -1,17 +1,20 @@
 # AutoResize
 
-Daemon Python qui surveille des répertoires contenant films/épisodes et réencode ceux dont la taille dépasse le seuil de référence (2h = 1.5 Go, avec un facteur 1.5x).
+Daemon Python qui surveille une bibliothèque vidéo et réencode automatiquement les fichiers disproportionnellement volumineux par rapport à leur durée. Utilise FFmpeg avec NVENC et un mode qualité constante (`-cq`).
 
 ## Config (`config.yaml`)
 - `watch_dirs` : répertoires surveillés
 - `check_interval_minutes` : fréquence
-- `reference_max_size_gb` / `reference_duration_hours` : référence
-- `oversize_factor` : seuil de dépassement pour déclencher le réencodage
+- `reference_max_size_gb` / `reference_duration_hours` : budget de taille proportionnel à la durée (ex. 1 Go pour 2h)
+- `oversize_factor` : seuil de dépassement pour déclencher le réencodage (ex. 1.3 = 30% au-dessus du budget)
+- `codec_video` / `preset_video` / `cq` : encodage NVENC avec qualité constante (`-cq`). Le bitrate devient variable selon la complexité de la scène.
+- `preset_fallback` / `fallback_video` : fallback CPU (`libx265`) avec preset séparé (`medium`).
 - `delete_original` : false par défaut (garde l'original)
 - `codec_video` : `hevc_nvenc` (GPU), `h264_nvenc` (GPU), `libx265` (CPU, taille minimale), `libx264` (CPU, rapide)
 - `preset_video` : `ultrafast`, `fast`, `medium`, `slow`, `veryslow` (ou `p1`..`p7` pour NVENC)
 - `preset_fallback` : preset pour le codec de repli (ex. `fast` pour `libx264`)
 - `cq` : qualité constante (`-cq`) pour NVENC uniquement (ex. `28`) ; remplace `-b:v` sur `hevc_nvenc`/`h264_nvenc`
+- Cache (`state.json`) : conserve `codec_version` (`codec`, `preset`, `cq`) pour permettre le retraitement si le profil change.
 
 ## Lancement
 ```bash
