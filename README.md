@@ -516,11 +516,3 @@ La licence du projet doit être précisée dans le dépôt avant toute redistrib
 ---
 
 AutoResize — une bibliothèque vidéo plus légère, automatiquement.
-
----
-
-## Mon avis après lecture du code
-
-Je mettrais la **Phase 1** en premier, avant le tableau de bord ou l'optimisation automatique. J'ai repéré un cas à corriger : dans le code publié, le nettoyage peut renommer la sortie sur le chemin original alors que `delete_original` est désactivé. Sous Linux, un renommage vers un chemin déjà existant peut remplacer ce fichier. Il faut donc sécuriser ce comportement avant de présenter cette option comme une garantie de conservation.
-
-Ensuite, je développerais la **file d'attente persistante**, puis les **statistiques** : ce sont elles qui donneront au futur tableau de bord des données fiables à afficher. Les profils intelligents viendraient après, une fois que tu disposes d'un historique exploitable.

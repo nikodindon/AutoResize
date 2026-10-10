@@ -149,9 +149,12 @@ def clean():
                 # Vérifier que le fichier renommé est valide avant suppression du backup
                 validated = validate_output(new_file, float(cache.get(k, {}).get("duration", 0) or float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", k], capture_output=True, text=True).stdout.strip() or 0)))
                 if validated:
-                    new_file.rename(original)
-                    logger.info(f"Clean: renamed {new_file} -> {original}")
-                    changed_dirs.add(str(original.parent))
+                    if original.exists() and not CONFIG.get("delete_original", False):
+                        logger.warning("Clean: original %s still exists and delete_original=False; not renaming.", original)
+                    else:
+                        new_file.rename(original)
+                        logger.info(f"Clean: renamed {new_file} -> {original}")
+                        changed_dirs.add(str(original.parent))
                     # Suppression sécurisée différée du backup .original
                     if Path(original_backup).exists():
                         Path(original_backup).unlink()
