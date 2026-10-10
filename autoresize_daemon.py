@@ -10,6 +10,35 @@ logging.basicConfig(
 )
 logger = logging.getLogger("autoresize")
 
+def kodi_rpc(method, params=None):
+    import base64, urllib.request
+    kodi_cfg = CONFIG.get("kodi", {})
+    if not kodi_cfg.get("host"):
+        return False
+    auth = base64.b64encode(
+        f"{kodi_cfg.get('user', '')}:{kodi_cfg.get('pass', '')}".encode()
+    ).decode()
+    payload = {
+        "jsonrpc": "2.0",
+        "method": method,
+        "params": params or {},
+        "id": 1,
+    }
+    req = urllib.request.Request(
+        f"http://{kodi_cfg['host']}:{kodi_cfg.get('port', 8082)}/jsonrpc",
+        data=json.dumps(payload).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "Basic " + auth,
+        },
+    )
+    with urllib.request.urlopen(req, timeout=10) as response:
+        result = json.loads(response.read().decode())
+    if "error" in result:
+        raise RuntimeError(result["error"])
+    logger.info("Kodi RPC successful: %s", method)
+    return True
+
 def target_size(duration):
     return (CONFIG["reference_max_size_gb"] * 1024**3) / (CONFIG["reference_duration_hours"]*3600) * duration
 
@@ -76,25 +105,7 @@ def reencode(src):
             if Path(str(src)).exists():
                 Path(str(src)).rename(original_backup)
                 logger.info(f"Original backed up: {str(src)} -> {original_backup}")
-            # Appel Kodi clean library
-            try:
-                import urllib.request, base64, json
-                kodi_cfg = CONFIG.get("kodi", {})
-                if kodi_cfg.get("host"):
-                    content = "movies" if "series" not in str(src).lower() else "tvshows"
-                    auth = base64.b64encode(f"{kodi_cfg.get('user','')}:{kodi_cfg.get('pass','')}".encode()).decode()
-                    req = urllib.request.Request(
-                        f"http://{kodi_cfg['host']}:{kodi_cfg.get('port',8082)}/jsonrpc",
-                        data=json.dumps({"jsonrpc":"2.0","method":"VideoLibrary.Clean","params":{"showdialogs":False,"content":content},"id":1}).encode(),
-                        headers={"Content-Type":"application/json","Authorization":"Basic "+auth}
-                    )
-                    urllib.request.urlopen(req, timeout=5)
-                    logger.info("Kodi clean library called.")
-            except Exception as e:
-                logger.warning(f"Kodi clean library failed: {e}")
-    else:
-        logger.warning(f"Output validation failed for {out}; keeping original untouched.")
-    # Mise à jour du cache avec la version du codec
+            # Mise à jour du cache avec la version du codec
     final_path = Path(out)
     if final_path.exists():
         final_size = final_path.stat().st_size
@@ -107,6 +118,7 @@ def reencode(src):
         cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out}
         save_cache(cache)
     logger.info(f"Marked {src} as reencoded in state.json")
+    clean()
 
 def validate_output(path, expected_duration):
     try:
@@ -127,6 +139,7 @@ def ffmpeg_running():
 
 def clean():
     cache = load_cache()
+    changed_dirs = set()
     for k, v in cache.items():
         if v.get("reencoded") and v.get("reencoded_file"):
             original = Path(k)
@@ -138,6 +151,7 @@ def clean():
                 if validated:
                     new_file.rename(original)
                     logger.info(f"Clean: renamed {new_file} -> {original}")
+                    changed_dirs.add(str(original.parent))
                     # Suppression sécurisée différée du backup .original
                     if Path(original_backup).exists():
                         Path(original_backup).unlink()
@@ -146,6 +160,14 @@ def clean():
                     logger.warning(f"Clean: output validation failed for {new_file}, not renaming.")
             else:
                 logger.info(f"Clean: reencoded file missing {new_file}")
+    # Synchronisation Kodi après tous les renommages
+    for directory in sorted(changed_dirs):
+        try:
+            kodi_rpc("VideoLibrary.Scan", {"directory": directory, "showdialogs": False})
+            logger.info("Kodi library scan requested for %s", directory)
+        except Exception as e:
+            logger.warning("Kodi library scan failed for %s: %s", directory, e)
+
     logger.info("Clean finished.")
 
 def main():

@@ -1,6 +1,40 @@
 #!/bin/bash
-kill $(pgrep -f autoresize_daemon.py) $(pgrep -f 'ffmpeg -y -i /mnt') 2>/dev/null
+
+set -u
+
+SCRIPT="/home/niko/projects/autoresize/autoresize_daemon.py"
+LOG="/home/niko/projects/autoresize/daemon.log"
+
+echo "Arrêt des anciens démons..."
+
+# Arrêter uniquement les processus Python qui exécutent ce script précis.
+pids=$(pgrep -f "^python3 $SCRIPT$" || true)
+
+if [ -n "$pids" ]; then
+    while read -r pid; do
+        [ -n "$pid" ] && kill "$pid" 2>/dev/null || true
+    done <<< "$pids"
+
+    # Attendre leur arrêt
+    for i in {1..10}; do
+        pgrep -f "^python3 $SCRIPT$" >/dev/null || break
+        sleep 1
+    done
+
+    # Forcer l'arrêt si nécessaire
+    pids=$(pgrep -f "^python3 $SCRIPT$" || true)
+    if [ -n "$pids" ]; then
+        while read -r pid; do
+            [ -n "$pid" ] && kill -9 "$pid" 2>/dev/null || true
+        done <<< "$pids"
+    fi
+fi
+
+echo "Démarrage du démon..."
+
+cd /home/niko/projects/autoresize || exit 1
+nohup python3 "$SCRIPT" >> "$LOG" 2>&1 &
+
 sleep 1
-nohup python3 /home/niko/projects/autoresize/autoresize_daemon.py > /dev/null 2>&1 &
-sleep 1
-echo "Daemon redémarré (PID: $(pgrep -f autoresize_daemon.py))"
+
+pgrep -af "^python3 $SCRIPT$"
