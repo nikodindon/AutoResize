@@ -11,23 +11,16 @@ echo "Arrêt des anciens démons..."
 pids=$(pgrep -f "^python3 $SCRIPT$" || true)
 
 if [ -n "$pids" ]; then
+    # Forcer l'arrêt immédiat (le daemon ne gère pas SIGTERM)
     while read -r pid; do
-        [ -n "$pid" ] && kill "$pid" 2>/dev/null || true
+        [ -n "$pid" ] && kill -9 "$pid" 2>/dev/null || true
     done <<< "$pids"
 
     # Attendre leur arrêt
-    for i in {1..10}; do
+    for i in {1..15}; do
         pgrep -f "^python3 $SCRIPT$" >/dev/null || break
         sleep 1
     done
-
-    # Forcer l'arrêt si nécessaire
-    pids=$(pgrep -f "^python3 $SCRIPT$" || true)
-    if [ -n "$pids" ]; then
-        while read -r pid; do
-            [ -n "$pid" ] && kill -9 "$pid" 2>/dev/null || true
-        done <<< "$pids"
-    fi
 fi
 
 echo "Démarrage du démon..."
