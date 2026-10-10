@@ -105,20 +105,25 @@ def reencode(src):
             if Path(str(src)).exists():
                 Path(str(src)).rename(original_backup)
                 logger.info(f"Original backed up: {str(src)} -> {original_backup}")
-            # Mise à jour du cache avec la version du codec
-    final_path = Path(out)
-    if final_path.exists():
-        final_size = final_path.stat().st_size
-        cache = load_cache()
-        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out, "codec_version": {"codec": c, "preset": preset, "cq": CONFIG.get("cq")}, "size": final_size}
-        save_cache(cache)
-        logger.info(f"Updated cache size={final_size} for {final_path}")
+        # Mise à jour du cache avec la version du codec
+        final_path = Path(out)
+        if final_path.exists():
+            final_size = final_path.stat().st_size
+            cache = load_cache()
+            cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out, "codec_version": {"codec": c, "preset": preset, "cq": CONFIG.get("cq")}, "size": final_size}
+            save_cache(cache)
+            logger.info(f"Updated cache size={final_size} for {final_path}")
+        else:
+            cache = load_cache()
+            cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out}
+            save_cache(cache)
+        logger.info(f"Marked {src} as reencoded in state.json")
+        clean()
     else:
+        logger.warning(f"Output validation failed for {out}; not marking as completed.")
         cache = load_cache()
-        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": True, "reencoded_file": out}
+        cache[str(src)] = {**(cache.get(str(src), {})), "reencoded": False, "reencoded_failed": True, "reencoded_file": out}
         save_cache(cache)
-    logger.info(f"Marked {src} as reencoded in state.json")
-    clean()
 
 def validate_output(path, expected_duration):
     try:
@@ -155,10 +160,10 @@ def clean():
                         new_file.rename(original)
                         logger.info(f"Clean: renamed {new_file} -> {original}")
                         changed_dirs.add(str(original.parent))
-                    # Suppression sécurisée différée du backup .original
-                    if Path(original_backup).exists():
-                        Path(original_backup).unlink()
-                        logger.info(f"Clean: removed backup {original_backup}")
+                        # Suppression sécurisée différée du backup .original uniquement si delete_original est activé
+                        if CONFIG.get("delete_original", False) and Path(original_backup).exists():
+                            Path(original_backup).unlink()
+                            logger.info(f"Clean: removed backup {original_backup}")
                 else:
                     logger.warning(f"Clean: output validation failed for {new_file}, not renaming.")
             else:
